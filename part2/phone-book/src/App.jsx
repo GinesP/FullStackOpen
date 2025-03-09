@@ -35,11 +35,37 @@ const Persons = ({ persons, handleDeletePerson }) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="message" >
+      {message}
+    </div >
+  )
+}
+
+const NotificationError = ({ error }) => {
+  if (error === null) {
+    return null
+  }
+
+  return (
+    <div className="error" >
+      {error}
+    </div >
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -63,7 +89,7 @@ const App = () => {
           .then(response => {
             setPersons(persons.map(p => p.id !== person.id ? p : response))
           })
-          .catch(error => console.log(error))
+          .catch(error => setErrorMessage(`Information of ${newName} has already been removed from server`))
 
 
       }
@@ -73,8 +99,13 @@ const App = () => {
       .then(response => setPersons(persons.concat(response)))
       .catch(error => console.log(error))
     // setPersons(persons.concat({ name: newName, number: newNumber }))
+    setMessage(`Added ${newName}`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
     setNewName('')
     setNewNumber('')
+
   }
 
   const handleNameChange = (e) => {
@@ -109,6 +140,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
+      <NotificationError error={errorMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <br />
       <PersonForm
