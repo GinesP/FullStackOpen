@@ -3,8 +3,10 @@ const morgan = require('morgan')
 
 const app = express()
 
+morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(express.json())
 app.use(morgan('tiny'))
+
 
 
 let persons = [
@@ -58,7 +60,9 @@ const generateId = () => {
 	return newId
 }
 
-app.post('/api/persons', (request, response) => {
+const morganPost = morgan(':method :url :status :res[content-length] - :response-time ms :body')
+
+app.post('/api/persons', morganPost, (request, response) => {
 	const body = request.body
 	if (!body.name || !body.number) {
 		return response.status(400).json({
