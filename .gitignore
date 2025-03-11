@@ -23,3 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 part2/country-data/.env
+part3/package-lock.json
