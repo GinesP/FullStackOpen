@@ -1,3 +1,4 @@
+/*global process*/
 const mongoose = require('mongoose');
 
 if (process.argv.lenght < 3) {
